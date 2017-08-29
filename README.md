@@ -19,6 +19,8 @@ Keep it simple, stupid OFDM pipeline.
 
 ## Transmitter
 
+[kiss-ofdm-tx-stream.grc](https://github.com/drom/OFDM/blob/master/kiss-ofdm-tx-stream.grc)
+
 ### Tx bit-stream
 
 Generating randomized bit-stream, modulating with BPSK, tagging each 128 bit.
@@ -46,6 +48,8 @@ Very simple AWGN channel.
 ## Receiver
 
 ### Rx OFDM demodulator
+
+[kiss-ofdm-rx-stream.grc](https://github.com/drom/OFDM/blob/master/kiss-ofdm-rx-stream.grc)
 
 ![rx_samples](kiss-ofdm-rx-samples-bd.png)
 
