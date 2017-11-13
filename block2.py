@@ -34,7 +34,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         index_at_corr1 = np.argmax(np.float64(input_items[0][0]))
 
         val_at_corr = input_items[1][0][index_at_corr1]
-        # print '{}:{}'.format(index_at_corr1, val_at_corr)
+        print '{}:{}'.format(index_at_corr1, val_at_corr)
 
         output_items[0][:] = np.float32(val_at_corr)
 
