@@ -1,0 +1,3 @@
+*.pyc
+kiss_rx_ofdm.py
+kiss_tx_ofdm.py

@@ -22,7 +22,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         gr.sync_block.__init__(
             self,
             name='find max',   # will show up in GRC
-            in_sig=[(np.float32,1000), (np.float32,1000)],
+            in_sig=[(np.float32,320), (np.float32,320)],
             out_sig=[np.float32]
         )
         # if an attribute with the same name as a parameter is found,
@@ -31,10 +31,10 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
     def work(self, input_items, output_items):
 
-        index_at_corr = np.argmax(input_items[0][0])
-        print index_at_corr
-        val_at_corr = input_items[1][0][index_at_corr]
-        print val_at_corr
+        index_at_corr1 = np.argmax(np.float64(input_items[0][0]))
+
+        val_at_corr = input_items[1][0][index_at_corr1]
+        # print '{}:{}'.format(index_at_corr1, val_at_corr)
 
         output_items[0][:] = np.float32(val_at_corr)
 
