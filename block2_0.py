@@ -22,8 +22,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         """arguments to this function show up as parameters in GRC"""
         gr.sync_block.__init__(
             self,
-            name='find max',   # will show up in GRC
-            in_sig=[(np.float32,320), (np.float32,320)],
+            name='convert to message',   # will show up in GRC
+            in_sig=[np.float32],
             out_sig=[np.float32]
             # out_sig=[]
         )
@@ -32,15 +32,10 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         self.message_port_register_out(pmt.to_pmt("out"))
 
     def work(self, input_items, output_items):
+	print input_items[0][0]
 
-        index_at_corr1 = np.argmax(input_items[0][0])
+        fcorr = 3906.25010348*input_items[0][0]
+        self.message_port_pub(pmt.to_pmt("out"), pmt.cons(pmt.intern("freq"), pmt.to_pmt(fcorr)))
 
-        val_at_corr = input_items[1][0][index_at_corr1]
-	fcorr = 3906.25010348*val_at_corr
-
-        print '{}:{}:{}'.format(index_at_corr1, val_at_corr, fcorr)
-        
-	self.message_port_pub(pmt.to_pmt("out"), pmt.cons(pmt.intern("freq"), pmt.to_pmt(fcorr)))
-
-        output_items[0][:] = np.float32(val_at_corr)
+        output_items[0][:] = np.float32(fcorr)
         return len(output_items[0])
