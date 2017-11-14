@@ -36,7 +36,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         index_at_corr1 = np.argmax(input_items[0][0])
 
         val_at_corr = input_items[1][0][index_at_corr1]
-        # print '{}:{}'.format(index_at_corr1, val_at_corr)
+        print '{}:{}'.format(index_at_corr1, val_at_corr)
 
         fcorr = 3906.25010348*val_at_corr
         self.message_port_pub(pmt.to_pmt("out"), pmt.cons(pmt.intern("freq"), pmt.to_pmt(fcorr)))
