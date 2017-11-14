@@ -151,7 +151,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(192, 16)</value>
+      <value>(168, 16)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -226,7 +226,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(744, 24)</value>
+      <value>(592, 24)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -250,7 +250,70 @@
     </param>
     <param>
       <key>type</key>
-      <value>complex</value>
+      <value>float</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>waveform</key>
+      <value>analog.GR_COS_WAVE</value>
+    </param>
+  </block>
+  <block>
+    <key>analog_sig_source_x</key>
+    <param>
+      <key>amp</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>freq</key>
+      <value>samp_rate / fft_len * 32</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(584, 152)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>analog_sig_source_x_0_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>offset</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
     </param>
     <param>
       <key>samp_rate</key>
@@ -311,10 +374,11 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         index_at_corr1 = np.argmax(input_items[0][0])
 
         val_at_corr = input_items[1][0][index_at_corr1]
-        print '{}:{}'.format(index_at_corr1, val_at_corr)
+	fcorr = 3906.25010348*val_at_corr
 
-        fcorr = 3906.25010348*val_at_corr
-        self.message_port_pub(pmt.to_pmt("out"), pmt.cons(pmt.intern("freq"), pmt.to_pmt(fcorr)))
+        print '{}:{}:{}'.format(index_at_corr1, val_at_corr, fcorr)
+        
+	self.message_port_pub(pmt.to_pmt("out"), pmt.cons(pmt.intern("freq"), pmt.to_pmt(fcorr)))
 
         output_items[0][:] = np.float32(val_at_corr)
         return len(output_items[0])
@@ -330,7 +394,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(320, 496)</value>
+      <value>(288, 464)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -339,6 +403,82 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     <param>
       <key>id</key>
       <value>block2</value>
+    </param>
+  </block>
+  <block>
+    <key>epy_block</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_io_cache</key>
+      <value>('convert to message', 'blk', [], [('0', 'float', 1)], [('0', 'float', 1), ('out', 'message', 1)], 'Embedded Python Block example - a simple multiply const', [])</value>
+    </param>
+    <param>
+      <key>_source_code</key>
+      <value>"""
+Embedded Python Blocks:
+
+Each time this file is saved, GRC will instantiate the first class it finds
+to get ports and parameters of your block. The arguments to __init__  will
+be the parameters. All of them are required to have default values!
+"""
+
+import numpy as np
+import pmt
+from pmt import pmt_to_python
+import time
+import os
+from gnuradio import gr
+from multiprocessing import Pool, TimeoutError
+
+
+class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
+    """Embedded Python Block example - a simple multiply const"""
+
+    def __init__(self):  # only default arguments here
+        """arguments to this function show up as parameters in GRC"""
+        gr.sync_block.__init__(
+            self,
+            name='convert to message',   # will show up in GRC
+            in_sig=[np.float32],
+            out_sig=[np.float32]
+            # out_sig=[]
+        )
+        # if an attribute with the same name as a parameter is found,
+        # a callback is registered (properties work, too).
+        self.message_port_register_out(pmt.to_pmt("out"))
+
+    def work(self, input_items, output_items):
+	print input_items[0][0]
+
+        fcorr = 3906.25010348*input_items[0][0]
+        self.message_port_pub(pmt.to_pmt("out"), pmt.cons(pmt.intern("freq"), pmt.to_pmt(fcorr)))
+
+        output_items[0][:] = np.float32(fcorr)
+        return len(output_items[0])
+</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(432, 376)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>block2_0</value>
     </param>
   </block>
   <block>
@@ -393,7 +533,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
   </block>
   <block>
-    <key>blocks_message_debug</key>
+    <key>blocks_float_to_complex</key>
     <param>
       <key>alias</key>
       <value></value>
@@ -408,11 +548,11 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(400, 384)</value>
+      <value>(760, 136)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -420,7 +560,74 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>id</key>
-      <value>blocks_message_debug_0</value>
+      <value>blocks_float_to_complex_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_moving_average_xx</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(424, 524)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_moving_average_xx_0</value>
+    </param>
+    <param>
+      <key>length</key>
+      <value>1000</value>
+    </param>
+    <param>
+      <key>max_iter</key>
+      <value>4000</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>scale</key>
+      <value>.001</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
     </param>
   </block>
   <block>
@@ -655,7 +862,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(640, 524)</value>
+      <value>(632, 460)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -855,7 +1062,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>fftsize</key>
-      <value>fft_len</value>
+      <value>4096</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -954,11 +1161,11 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>fftsize</key>
-      <value>fft_len</value>
+      <value>4096</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(408, 24)</value>
+      <value>(368, 24)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1053,7 +1260,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>fftsize</key>
-      <value>fft_len</value>
+      <value>256</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -2500,25 +2707,49 @@ class Xyz:
   </block>
   <connection>
     <source_block_id>analog_sig_source_x_0</source_block_id>
-    <sink_block_id>blocks_multiply_xx_0</sink_block_id>
+    <sink_block_id>blocks_float_to_complex_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>analog_sig_source_x_0_0</source_block_id>
+    <sink_block_id>blocks_float_to_complex_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
+  </connection>
+  <connection>
     <source_block_id>block2</source_block_id>
+    <sink_block_id>blocks_moving_average_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>block2_0</source_block_id>
     <sink_block_id>analog_sig_source_x_0</sink_block_id>
     <source_key>out</source_key>
     <sink_key>freq</sink_key>
   </connection>
   <connection>
-    <source_block_id>block2</source_block_id>
-    <sink_block_id>blocks_message_debug_0</sink_block_id>
+    <source_block_id>block2_0</source_block_id>
+    <sink_block_id>analog_sig_source_x_0_0</sink_block_id>
     <source_key>out</source_key>
-    <sink_key>print</sink_key>
+    <sink_key>freq</sink_key>
   </connection>
   <connection>
-    <source_block_id>block2</source_block_id>
+    <source_block_id>block2_0</source_block_id>
     <sink_block_id>blocks_tag_debug_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_float_to_complex_0</source_block_id>
+    <sink_block_id>blocks_multiply_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_moving_average_xx_0</source_block_id>
+    <sink_block_id>block2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -2574,7 +2805,7 @@ class Xyz:
     <source_block_id>uhd_usrp_source_0</source_block_id>
     <sink_block_id>blocks_multiply_xx_0</sink_block_id>
     <source_key>0</source_key>
-    <sink_key>1</sink_key>
+    <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>uhd_usrp_source_0</source_block_id>
