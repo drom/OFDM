@@ -13,10 +13,13 @@ import time
 import os
 from gnuradio import gr
 from multiprocessing import Pool, TimeoutError
+import time
 
 
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     """Embedded Python Block example - a simple multiply const"""
+
+    # fcorr_last = None
 
     def __init__(self):  # only default arguments here
         """arguments to this function show up as parameters in GRC"""
@@ -31,11 +34,12 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         # a callback is registered (properties work, too).
         self.message_port_register_out(pmt.to_pmt("out"))
 
+
     def work(self, input_items, output_items):
-	print input_items[0][0]
 
-        fcorr = 3906.25010348*input_items[0][0]
-        self.message_port_pub(pmt.to_pmt("out"), pmt.cons(pmt.intern("freq"), pmt.to_pmt(fcorr)))
+        fcorr_ma = np.abs(3906.25*input_items[0][0])
+        # print '{}'.format(fcorr_ma)
+        self.message_port_pub(pmt.to_pmt("out"), pmt.cons(pmt.intern("freq"), pmt.to_pmt(fcorr_ma)))
 
-        output_items[0][:] = np.float32(fcorr)
+        output_items[0][:] = input_items[0][0]
         return len(output_items[0])

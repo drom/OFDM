@@ -1,0 +1,10 @@
+restype,iir
+gstop,20.0
+filttype,cheby2
+bandtype,lpf
+paramtype,digital
+sbedge,0.2
+pbedge,0.1
+gpass,6.0
+b,0.09814854555801143,-0.13935436373674184,0.0981485455580114
+a,1.0,-1.6497859105741832,0.7067286379534643

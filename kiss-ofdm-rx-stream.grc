@@ -313,11 +313,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(216, 196)</value>
+      <value>(248, 196)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -349,7 +349,7 @@
     </param>
     <param>
       <key>offset</key>
-      <value>29</value>
+      <value>32</value>
     </param>
   </block>
   <block>
@@ -797,6 +797,12 @@
   <connection>
     <source_block_id>pad_source_0</source_block_id>
     <sink_block_id>blocks_keep_m_in_n_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>pad_source_0</source_block_id>
+    <sink_block_id>blocks_stream_to_vector_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
