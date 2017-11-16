@@ -409,7 +409,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(592, 376)</value>
+      <value>(600, 376)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1024,7 +1024,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>_io_cache</key>
-      <value>('keep m in n', 'blk', [('example_param', '1.0')], [('0', 'complex', 320), ('1', 'float', 1)], [('0', 'complex', 256)], 'arguments to this function show up as parameters in GRC', ['example_param'])</value>
+      <value>('keep m in n', 'blk', [('example_param', '1.0')], [('0', 'complex', 320), ('1', 'float', 1)], [('0', 'complex', 256)], '', ['example_param'])</value>
     </param>
     <param>
       <key>_source_code</key>
@@ -1042,7 +1042,12 @@ from gnuradio import gr
 
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
 
+
     def __init__(self, example_param=1.0):  # only default arguments here
+        self.fixed_index = None
+        self.last_index = None
+        self.done = False
+
         """arguments to this function show up as parameters in GRC"""
         gr.sync_block.__init__(
             self,
@@ -1055,22 +1060,36 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         self.example_param = example_param
 
     def work(self, input_items, output_items):
-        index = np.int(input_items[1][0])
-        # print "index:{}".format(index)
         input_vector = input_items[0][0]
+        index = np.int(input_items[1][0])
+        if (self.done == False):
+            output_vector = input_vector[0:256]
+            if (self.last_index == None) :
+                self.last_index = index
+                print "1"
+            elif (self.last_index == index) :
+                self.fixed_index = index
+                self.done = True
+                print "2"
+            elif (self.last_index != index):
+                self.last_index = index
+                print "3"
 
-        if (index &lt; 32) :
-            # print "{}:{}".format(index+32,(index-32)+320)
-            output_vector = input_vector[index+32:(index-32)+320]
-            # print "length:{}".format(len(output_vector2))
-        elif (index &gt; 287) :
-            # print "{}:{}".format(((index+32)-320),320-(32+(320-index)))
-            output_vector = input_vector[((index+32)-320):320-(32+(320-index))]
-            # print "length:{}".format(len(output_vector2))
-        else :
-            # print "{}:{}:{}:{}".format(0,index-32,index+32,320)
-            output_vector = np.concatenate((input_vector[0:index-32], input_vector[index+32:320]))
-            # print "length:{}".format(len(output_vector2))
+        print "index:{}".format(self.fixed_index)
+
+        if (self.done == True) :
+            if (self.fixed_index &lt; 32) :
+                # print "{}:{}".format(index+32,(index-32)+320)
+                output_vector = input_vector[self.fixed_index+32:(self.fixed_index-32)+320]
+                # print "length:{}".format(len(output_vector2))
+            elif (self.fixed_index &gt; 287) :
+                # print "{}:{}".format(((index+32)-320),320-(32+(320-index)))
+                output_vector = input_vector[((self.fixed_index+32)-320):320-(32+(320-self.fixed_index))]
+                # print "length:{}".format(len(output_vector2))
+            else :
+                # print "{}:{}:{}:{}".format(0,index-32,index+32,320)
+                output_vector = np.concatenate((input_vector[0:self.fixed_index-32], input_vector[self.fixed_index+32:320]))
+                # print "length:{}".format(len(output_vector2))
 
         output_items[0][:] = output_vector
         return len(output_items[0])
@@ -1306,106 +1325,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>plotfreq</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>plottime</key>
       <value>True</value>
-    </param>
-    <param>
-      <key>plotwaterfall</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>showports</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>showrf</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>wintype</key>
-      <value>firdes.WIN_BLACKMAN_hARRIS</value>
-    </param>
-  </block>
-  <block>
-    <key>qtgui_sink_x</key>
-    <param>
-      <key>bw</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>fc</key>
-      <value>base_freq</value>
-    </param>
-    <param>
-      <key>freqchangevar</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>fftsize</key>
-      <value>4096</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(368, 24)</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>qtgui_sink_x_0_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value>""</value>
-    </param>
-    <param>
-      <key>plotconst</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>plotfreq</key>
-      <value>False</value>
     </param>
     <param>
       <key>plottime</key>
@@ -1472,106 +1392,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1080, 552)</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>qtgui_sink_x_0_1</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value>""</value>
-    </param>
-    <param>
-      <key>plotconst</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>plotfreq</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>plottime</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>plotwaterfall</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>showports</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>showrf</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>wintype</key>
-      <value>firdes.WIN_BLACKMAN_hARRIS</value>
-    </param>
-  </block>
-  <block>
-    <key>qtgui_sink_x</key>
-    <param>
-      <key>bw</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>fc</key>
-      <value>base_freq</value>
-    </param>
-    <param>
-      <key>freqchangevar</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>fftsize</key>
-      <value>256</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1080, 256)</value>
+      <value>(1088, 256)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1612,204 +1433,6 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     <param>
       <key>plotwaterfall</key>
       <value>False</value>
-    </param>
-    <param>
-      <key>showports</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>showrf</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>wintype</key>
-      <value>firdes.WIN_BLACKMAN_hARRIS</value>
-    </param>
-  </block>
-  <block>
-    <key>qtgui_sink_x</key>
-    <param>
-      <key>bw</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>fc</key>
-      <value>base_freq</value>
-    </param>
-    <param>
-      <key>freqchangevar</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>fftsize</key>
-      <value>4096</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(784, 216)</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>qtgui_sink_x_0_2</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value>""</value>
-    </param>
-    <param>
-      <key>plotconst</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>plotfreq</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>plottime</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>plotwaterfall</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>showports</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>showrf</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>wintype</key>
-      <value>firdes.WIN_BLACKMAN_hARRIS</value>
-    </param>
-  </block>
-  <block>
-    <key>qtgui_sink_x</key>
-    <param>
-      <key>bw</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>fc</key>
-      <value>base_freq</value>
-    </param>
-    <param>
-      <key>freqchangevar</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>fftsize</key>
-      <value>fft_len</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(904, 640)</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>qtgui_sink_x_1</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value>""</value>
-    </param>
-    <param>
-      <key>plotconst</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>plotfreq</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>plottime</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>plotwaterfall</key>
-      <value>True</value>
     </param>
     <param>
       <key>showports</key>
@@ -3271,12 +2894,6 @@ class Xyz:
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>analog_sig_source_x_0</source_block_id>
-    <sink_block_id>qtgui_sink_x_0_2</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>block2</source_block_id>
     <sink_block_id>blocks_moving_average_xx_0</sink_block_id>
     <source_key>0</source_key>
@@ -3326,12 +2943,6 @@ class Xyz:
   </connection>
   <connection>
     <source_block_id>blocks_multiply_conjugate_cc_0</source_block_id>
-    <sink_block_id>qtgui_sink_x_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_multiply_conjugate_cc_0</source_block_id>
     <sink_block_id>virtual_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -3361,12 +2972,6 @@ class Xyz:
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_vector_to_stream_0</source_block_id>
-    <sink_block_id>qtgui_sink_x_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>epy_block_0</source_block_id>
     <sink_block_id>blocks_vector_to_stream_0</sink_block_id>
     <source_key>0</source_key>
@@ -3392,7 +2997,7 @@ class Xyz:
   </connection>
   <connection>
     <source_block_id>kiss_ofdm_rx_stream_0</source_block_id>
-    <sink_block_id>qtgui_sink_x_0_1</sink_block_id>
+    <sink_block_id>qtgui_sink_x_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -3411,12 +3016,6 @@ class Xyz:
   <connection>
     <source_block_id>uhd_usrp_source_0</source_block_id>
     <sink_block_id>kiss_ofdm_rx_cp_corr_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>uhd_usrp_source_0</source_block_id>
-    <sink_block_id>qtgui_sink_x_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

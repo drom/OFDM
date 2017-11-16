@@ -82,6 +82,33 @@
     </param>
   </block>
   <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(408, 20)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>corr_freq</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>32</value>
+    </param>
+  </block>
+  <block>
     <key>analog_const_source_x</key>
     <param>
       <key>alias</key>
@@ -152,11 +179,11 @@
     </param>
     <param>
       <key>freq</key>
-      <value>samp_rate*32/fft_len</value>
+      <value>samp_rate*corr_freq/fft_len</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(432, 304)</value>
+      <value>(368, 296)</value>
     </param>
     <param>
       <key>_rotation</key>
