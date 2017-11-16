@@ -159,7 +159,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1e6</value>
+      <value>999996.5</value>
     </param>
   </block>
   <block>
@@ -215,6 +215,69 @@
     <param>
       <key>stop</key>
       <value>1</value>
+    </param>
+    <param>
+      <key>rangeType</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>counter_slider</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_range</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>999996.5</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(728, 32)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>variable_qtgui_range_1</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value></value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>999996</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>.0001</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>999997</value>
     </param>
     <param>
       <key>rangeType</key>
@@ -300,7 +363,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 116)</value>
+      <value>(584, 172)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -572,7 +635,7 @@
     </param>
     <param>
       <key>num_samps</key>
-      <value>1000</value>
+      <value>192</value>
     </param>
     <param>
       <key>type</key>
@@ -1375,7 +1438,7 @@
     </param>
     <param>
       <key>samp_rate</key>
-      <value>samp_rate</value>
+      <value>1e6</value>
     </param>
     <param>
       <key>hide_cmd_port</key>
