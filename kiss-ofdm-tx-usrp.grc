@@ -1438,7 +1438,7 @@
     </param>
     <param>
       <key>samp_rate</key>
-      <value>1e6</value>
+      <value>samp_rate</value>
     </param>
     <param>
       <key>hide_cmd_port</key>
