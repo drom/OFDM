@@ -421,45 +421,6 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
   </block>
   <block>
-    <key>blocks_conjugate_cc</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(880, 568)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_conjugate_cc_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>blocks_file_sink</key>
     <param>
       <key>append</key>
@@ -3346,18 +3307,6 @@ class Xyz:
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_conjugate_cc_0</source_block_id>
-    <sink_block_id>qtgui_sink_x_0_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_conjugate_cc_0</source_block_id>
-    <sink_block_id>qtgui_sink_x_0_1_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>blocks_message_strobe_0</source_block_id>
     <sink_block_id>analog_sig_source_x_0</sink_block_id>
     <source_key>strobe</source_key>
@@ -3437,13 +3386,19 @@ class Xyz:
   </connection>
   <connection>
     <source_block_id>kiss_ofdm_rx_stream_0</source_block_id>
-    <sink_block_id>blocks_conjugate_cc_0</sink_block_id>
+    <sink_block_id>blocks_tag_debug_3</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>kiss_ofdm_rx_stream_0</source_block_id>
-    <sink_block_id>blocks_tag_debug_3</sink_block_id>
+    <sink_block_id>qtgui_sink_x_0_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>kiss_ofdm_rx_stream_0</source_block_id>
+    <sink_block_id>qtgui_sink_x_0_1_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
