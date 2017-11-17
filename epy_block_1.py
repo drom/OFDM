@@ -35,7 +35,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     def work(self, input_items, output_items):
 
         dcorr = 1*input_items[0][0]
-        print dcorr
+        #print dcorr
         self.message_port_pub(pmt.to_pmt("out"), pmt.cons(pmt.intern("freq"), pmt.to_pmt(dcorr)))
 
         output_items[0][:] = input_items[0][0]
