@@ -23,7 +23,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             self,
             name='keep m in n',   # will show up in GRC
             in_sig=[(np.complex64,320),np.float32],
-            out_sig=[(np.complex64,256)]
+            out_sig=[(np.complex64,256),np.float32]
         )
         # if an attribute with the same name as a parameter is found,
         # a callback is registered (properties work, too).
@@ -32,6 +32,12 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     def work(self, input_items, output_items):
         input_vector = input_items[0][0]
         index = np.int(input_items[1][0])
+        drift_corr = 0
+        if (self.done) :
+            drift_corr = 1000000*(self.fixed_index-index-32)/256
+            # print drift_corr
+
+
         if (self.done == False):
             output_vector = input_vector[0:256]
             if (self.last_index == None) :
@@ -45,7 +51,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                 self.last_index = index
                 print "3"
 
-        print "index:{}".format(self.fixed_index)
+        # print "index:{}".format(self.fixed_index)
 
         if (self.done == True) :
             if (self.fixed_index < 32) :
@@ -60,6 +66,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                 # print "{}:{}:{}:{}".format(0,index-32,index+32,320)
                 output_vector = np.concatenate((input_vector[0:self.fixed_index-32], input_vector[self.fixed_index+32:320]))
                 # print "length:{}".format(len(output_vector2))
-
+	
+        output_items[1][:] = drift_corr
         output_items[0][:] = output_vector
         return len(output_items[0])
