@@ -1,0 +1,25 @@
+<block>
+  <name>Gain cc</name>
+  <key>drom_gain_cc</key>
+  <category>[DROM]</category>
+  <import>import drom</import>
+  <make>drom.drom_gain_cc($symbol_length, $gain)</make>
+  <param>
+    <name>Symbol_length</name>
+    <key>symbol_length</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Gain</name>
+    <key>gain</key>
+    <type>float</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>
