@@ -30,8 +30,10 @@ namespace gr {
         {
             private:
                 // Nothing to declare in this block.
+                int d_counter;
                 int d_symbol_length;
                 float d_gain;
+                gr_complex* d_prev;
 
             public:
                 drom_gain_cc_impl(

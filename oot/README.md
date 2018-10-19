@@ -14,6 +14,8 @@ Write some code.
 Compile, Test.
 
 ```
+cd build
+camke ..
 make
 make test
 ```

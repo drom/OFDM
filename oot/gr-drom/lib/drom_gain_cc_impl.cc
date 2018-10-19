@@ -24,11 +24,13 @@
 
 #include <gnuradio/io_signature.h>
 #include "drom_gain_cc_impl.h"
+#include "radiodrom.h"
 
 namespace gr {
     namespace drom {
 
         drom_gain_cc::sptr
+
         drom_gain_cc::make(int symbol_length, float gain) {
             return gnuradio::get_initial_sptr
                 (new drom_gain_cc_impl(symbol_length, gain));
@@ -37,15 +39,23 @@ namespace gr {
         /*
          * The private constructor
          */
-         drom_gain_cc_impl::drom_gain_cc_impl(int symbol_length, float gain)
-            : gr::block("drom_gain_cc",
+         drom_gain_cc_impl::drom_gain_cc_impl (
+             int symbol_length,
+             float gain
+         )
+            : gr::block(
+                "drom_gain_cc",
                 gr::io_signature::make(1, 1, sizeof(gr_complex)),
-                gr::io_signature::make(1, 1, sizeof(gr_complex))),
-                d_symbol_length(symbol_length),
-                d_gain(gain)
+                gr::io_signature::make(1, 1, sizeof(gr_complex))
+            ),
+            d_counter(0),
+            d_symbol_length(symbol_length),
+            d_gain(gain),
+            d_prev(new gr_complex[symbol_length])
         {
             set_output_multiple(symbol_length);
         }
+
 
         /*
          * Our virtual destructor.
@@ -72,20 +82,10 @@ namespace gr {
              const gr_complex *in = (const gr_complex *) input_items[0];
              gr_complex *out = (gr_complex *) output_items[0];
 
-             // for each symbol
-             for (int i = 0; i < noutput_items / d_symbol_length; i++) {
-                 // for d_symbol_length complex outputs
-                 for (int j = 0; j < d_symbol_length; j++) {
-                     const gr_complex tmp = in[i * d_symbol_length + j];
-                     out[i * d_symbol_length + j] = gr_complex(
-                         d_gain * tmp.real(),
-                         d_gain * tmp.imag()
-                     );
-                 }
-             }
+             // radiodrom_chunk_gain(in, out, noutput_items, d_gain, d_symbol_length);
 
-             // Tell runtime system how many input items we consumed on
-             // each input stream.
+             radiodrom_chunk_cmul_conj(in, out, d_prev, noutput_items, d_symbol_length);
+
              consume_each (noutput_items);
 
              // Tell runtime system how many output items we produced.
